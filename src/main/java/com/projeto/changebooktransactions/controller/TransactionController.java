@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/change-book/v1/transaction")
+@RequestMapping("/api/change-book/v1/transactions")
 @CrossOrigin
 public class TransactionController {
 
