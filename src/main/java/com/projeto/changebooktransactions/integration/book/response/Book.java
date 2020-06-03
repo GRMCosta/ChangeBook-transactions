@@ -36,6 +36,9 @@ public class Book {
 
     private Boolean isForSell;
 
+    @NotNull(message = Messages.IMAGE_IS_REQUIRED)
+    private String image;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;

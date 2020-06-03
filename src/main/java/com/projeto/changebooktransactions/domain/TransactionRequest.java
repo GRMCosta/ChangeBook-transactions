@@ -4,7 +4,6 @@ import com.projeto.changebooktransactions.config.Messages;
 import com.projeto.changebooktransactions.integration.book.response.Book;
 import com.projeto.changebooktransactions.integration.user.response.User;
 import lombok.*;
-
 import javax.validation.constraints.NotBlank;
 import java.math.BigDecimal;
 
@@ -21,6 +20,7 @@ public class TransactionRequest {
     private String bookUserId;
 
     private BigDecimal price;
+
 
     public Transaction toTradeTransaction(Book bookPartner, Book bookUser){
         return Transaction.builder()

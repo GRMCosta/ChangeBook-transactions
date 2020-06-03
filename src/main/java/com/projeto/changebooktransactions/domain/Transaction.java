@@ -1,5 +1,6 @@
 package com.projeto.changebooktransactions.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.projeto.changebooktransactions.integration.book.response.Book;
 import com.projeto.changebooktransactions.integration.user.response.User;
 import lombok.*;
@@ -38,11 +39,14 @@ public class Transaction {
     @JoinColumn(name = "new_owner")
     private User newOwner;
 
+    @JsonProperty("transaction_type")
     private TransactionType transactionType;
 
     private BigDecimal price;
 
+    @JsonProperty("is_complete")
     private boolean isComplete;
 
+    @JsonProperty("end_date")
     private LocalDate endDate;
 }
