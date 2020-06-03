@@ -6,7 +6,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum TransactionType {
-    TRADE(1), SELL(2);
+    TRADE(0), SELL(1);
 
     public Integer transactionId;
 }

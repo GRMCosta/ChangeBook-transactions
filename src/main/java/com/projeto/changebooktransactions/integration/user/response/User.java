@@ -20,12 +20,12 @@ public class User {
     @JsonProperty("user_name")
     private String userName;
 
-    @Column(unique = true)
+    @Id
     private String cpf;
 
+    @Column(unique = true)
     private String city;
 
-    @Id
     private String email;
 
     private String phone;

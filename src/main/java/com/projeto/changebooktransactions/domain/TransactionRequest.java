@@ -1,39 +1,45 @@
 package com.projeto.changebooktransactions.domain;
 
-import com.projeto.changebooktransactions.integration.book.Book;
+import com.projeto.changebooktransactions.config.Messages;
+import com.projeto.changebooktransactions.integration.book.response.Book;
+import com.projeto.changebooktransactions.integration.user.response.User;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.math.BigDecimal;
-import java.time.LocalDate;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Entity
 public class TransactionRequest {
 
-    @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
-    private String id;
+    @NotBlank(message = Messages.BOOK_PARTNER_IS_REQUIRED)
+    private String bookPartnerId;
 
-    @OneToOne
-    @JoinColumn(name = "old_ower")
-    private Book oldOwer;
-
-    @OneToOne
-    @JoinColumn(name = "new_ower")
-    private Book newOwer;
-
-    private TransactionType transactionType;
+    private String bookUserId;
 
     private BigDecimal price;
 
-    private boolean isComplete;
+    public Transaction toTradeTransaction(Book bookPartner, Book bookUser){
+        return Transaction.builder()
+                .bookPartner(bookPartner)
+                .oldOwner(bookPartner.getUser())
+                .bookUser(bookUser)
+                .newOwner(bookUser.getUser())
+                .transactionType(TransactionType.TRADE)
+                .price(this.getPrice())
+                .build();
+    }
 
-    private LocalDate endDate;
+    public Transaction toSellTransaction(Book bookPartner, User user){
+        return Transaction.builder()
+                .bookPartner(bookPartner)
+                .oldOwner(bookPartner.getUser())
+                .newOwner(user)
+                .transactionType(TransactionType.SELL)
+                .price(this.getPrice())
+                .build();
+    }
 }
