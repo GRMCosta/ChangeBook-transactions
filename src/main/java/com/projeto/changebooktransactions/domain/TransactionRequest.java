@@ -6,6 +6,7 @@ import com.projeto.changebooktransactions.integration.user.response.User;
 import lombok.*;
 import javax.validation.constraints.NotBlank;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -30,6 +31,7 @@ public class TransactionRequest {
                 .newOwner(bookUser.getUser())
                 .transactionType(TransactionType.TRADE)
                 .price(this.getPrice())
+                .endDate(LocalDate.now())
                 .build();
     }
 
@@ -40,6 +42,7 @@ public class TransactionRequest {
                 .newOwner(user)
                 .transactionType(TransactionType.SELL)
                 .price(this.getPrice())
+                .endDate(LocalDate.now())
                 .build();
     }
 }
