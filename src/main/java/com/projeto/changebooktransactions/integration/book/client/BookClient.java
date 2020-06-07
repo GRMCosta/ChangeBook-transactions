@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import java.util.List;
+
 @FeignClient(name = "book", url = "${book.url}")
 public interface BookClient {
 
@@ -18,4 +20,7 @@ public interface BookClient {
 
     @RequestMapping(method = RequestMethod.PUT)
     void updateBook(@RequestBody Book book);
+
+    @RequestMapping(method = RequestMethod.GET)
+    List<Book> getUserBooks(@RequestHeader("Authorization") String token);
 }

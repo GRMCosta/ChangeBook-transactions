@@ -22,6 +22,8 @@ public class TransactionRequest {
 
     private BigDecimal price;
 
+    private Boolean isComplete;
+
 
     public Transaction toTradeTransaction(Book bookPartner, Book bookUser){
         return Transaction.builder()
@@ -32,6 +34,7 @@ public class TransactionRequest {
                 .transactionType(TransactionType.TRADE)
                 .price(this.getPrice())
                 .endDate(LocalDate.now())
+                .isComplete(this.getIsComplete())
                 .build();
     }
 

@@ -5,12 +5,14 @@ import com.projeto.changebooktransactions.config.exception.TransactionException;
 import com.projeto.changebooktransactions.domain.Transaction;
 import com.projeto.changebooktransactions.domain.TransactionType;
 import com.projeto.changebooktransactions.integration.book.client.BookClient;
+import com.projeto.changebooktransactions.integration.book.response.Book;
 import com.projeto.changebooktransactions.integration.user.response.User;
 import com.projeto.changebooktransactions.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 public class TransactionService {
@@ -25,6 +27,9 @@ public class TransactionService {
         this.transactionRepository = transactionRepository;
     }
 
+    public List<Transaction> getUserTransaction(User user){ return transactionRepository.getByNewOwner(user);}
+
+    public Boolean existsByNewOwner(User user){return transactionRepository.existsByNewOwner(user);}
 
     public void createTransaction(Transaction transaction){
         if(transaction.getTransactionType().equals(TransactionType.SELL) &&
@@ -39,7 +44,8 @@ public class TransactionService {
         if (transaction != null && transactionRepository.existsById(transaction.getId())
                 && transaction.getTransactionType() != null) {
             validateTransactionType(transaction.getTransactionType());
-            transaction.setEndDate(LocalDate.now());
+            if (transaction.isComplete())
+                transaction.setEndDate(LocalDate.now());
             updateBookInformation(transaction);
             transactionRepository.save(transaction);
         }
