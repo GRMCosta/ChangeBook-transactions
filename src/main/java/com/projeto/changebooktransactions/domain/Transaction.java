@@ -44,8 +44,8 @@ public class Transaction {
 
     private BigDecimal price;
 
-    @JsonProperty("is_complete")
-    private boolean isComplete;
+    @JsonProperty("status_transaction")
+    private StatusTransaction statusTransaction;
 
     @JsonProperty("end_date")
     private LocalDate endDate;

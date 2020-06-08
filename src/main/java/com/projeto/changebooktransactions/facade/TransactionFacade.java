@@ -1,18 +1,16 @@
 package com.projeto.changebooktransactions.facade;
 
+import com.projeto.changebooktransactions.domain.StatusTransaction;
 import com.projeto.changebooktransactions.domain.Transaction;
 import com.projeto.changebooktransactions.domain.TransactionRequest;
 import com.projeto.changebooktransactions.integration.book.client.BookClient;
-import com.projeto.changebooktransactions.integration.book.response.Book;
 import com.projeto.changebooktransactions.integration.user.client.UserClient;
 import com.projeto.changebooktransactions.integration.user.response.User;
 import com.projeto.changebooktransactions.service.TransactionService;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestBody;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,12 +44,14 @@ public class TransactionFacade {
 
     }
 
-    public List<Transaction> getUserIncompleteTransactons(String Authorization){
-        return getTransactions(Authorization).stream().filter(f -> !f.isComplete()).collect(Collectors.toList());
+    public List<Transaction> getUserIncompleteTransactions(String Authorization){
+        return getTransactions(Authorization).stream()
+                .filter(t -> t.getStatusTransaction() == StatusTransaction.PENDING).collect(Collectors.toList());
     }
 
-    public List<Transaction> getUserCompleteTransactons(String Authorization){
-        return getTransactions(Authorization).stream().filter(Transaction::isComplete).collect(Collectors.toList());
+    public List<Transaction> getUserCompleteTransactions(String Authorization){
+        return getTransactions(Authorization).stream().
+                filter(t -> t.getStatusTransaction() != StatusTransaction.PENDING).collect(Collectors.toList());
     }
 
     private List<Transaction> getTransactions(String Authorization) {
@@ -72,5 +72,10 @@ public class TransactionFacade {
 
     private User getUserByToken(String authorization){
         return userClient.getUserByToken(authorization);
+    }
+
+    public void cancelTransaction(String transactionId, String Authorization) {
+        final User user = userClient.getUserByToken(Authorization);
+        transactionService.cancelTransactionById(user, transactionId);
     }
 }

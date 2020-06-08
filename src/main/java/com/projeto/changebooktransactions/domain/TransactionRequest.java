@@ -22,7 +22,7 @@ public class TransactionRequest {
 
     private BigDecimal price;
 
-    private Boolean isComplete;
+    private StatusTransaction statusTransaction;
 
 
     public Transaction toTradeTransaction(Book bookPartner, Book bookUser){
@@ -34,7 +34,7 @@ public class TransactionRequest {
                 .transactionType(TransactionType.TRADE)
                 .price(this.getPrice())
                 .endDate(LocalDate.now())
-                .isComplete(Boolean.FALSE)
+                .statusTransaction(StatusTransaction.PENDING)
                 .build();
     }
 
@@ -46,6 +46,7 @@ public class TransactionRequest {
                 .transactionType(TransactionType.SELL)
                 .price(this.getPrice())
                 .endDate(LocalDate.now())
+                .statusTransaction(StatusTransaction.PENDING)
                 .build();
     }
 }
