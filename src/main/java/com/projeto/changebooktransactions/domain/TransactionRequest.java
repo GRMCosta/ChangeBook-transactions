@@ -34,7 +34,7 @@ public class TransactionRequest {
                 .transactionType(TransactionType.TRADE)
                 .price(this.getPrice())
                 .endDate(LocalDate.now())
-                .isComplete(this.getIsComplete())
+                .isComplete(Boolean.FALSE)
                 .build();
     }
 
