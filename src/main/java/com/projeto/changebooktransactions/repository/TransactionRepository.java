@@ -14,4 +14,8 @@ public interface TransactionRepository extends JpaRepository<Transaction, String
     List<Transaction> getByNewOwner(User newOwner);
 
     boolean existsByNewOwner(User newOwner);
+
+    List<Transaction> getByOldOwner(User user);
+
+    Boolean existsByOldOwner(User oldOwner);
 }

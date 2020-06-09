@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 public enum StatusTransaction {
-    PENDING(0) , CANCEL(1), COMPLETED(2);
+    PENDING(0) , CANCELED(1), COMPLETED(2);
 
     private Integer indicator;
 

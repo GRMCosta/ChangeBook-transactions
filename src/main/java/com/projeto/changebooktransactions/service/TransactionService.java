@@ -28,12 +28,16 @@ public class TransactionService {
         this.transactionRepository = transactionRepository;
     }
 
-    public List<Transaction> getUserTransaction(User user) {
-        return transactionRepository.getByNewOwner(user);
+    public List<Transaction> getUserTransaction(String expand, User user) {
+        if(expand.equalsIgnoreCase("user"))
+            return transactionRepository.getByNewOwner(user);
+        else
+            return transactionRepository.getByOldOwner(user);
+
     }
 
-    public Boolean existsByNewOwner(User user) {
-        return transactionRepository.existsByNewOwner(user);
+    public Boolean existsByOwner(User user) {
+        return (transactionRepository.existsByNewOwner(user) || transactionRepository.existsByOldOwner(user));
     }
 
     public void createTransaction(Transaction transaction) {
@@ -45,16 +49,18 @@ public class TransactionService {
     }
 
 
-    public void updateTransaction(Transaction transaction) {
-        if (transaction != null && transactionRepository.existsById(transaction.getId())
-                && transaction.getTransactionType() != null) {
+    public void updateTransaction(String transactionId) {
+        if (transactionRepository.existsById(transactionId)) {
+            val transaction = transactionRepository.findById(transactionId).get();
             validateTransactionType(transaction.getTransactionType());
-            if (transaction.getStatusTransaction().equals(StatusTransaction.COMPLETED))
+            if (transaction.getStatusTransaction().equals(StatusTransaction.PENDING)) {
+                transaction.setStatusTransaction(StatusTransaction.COMPLETED);
                 transaction.setEndDate(LocalDate.now());
+            }
             updateBookInformation(transaction);
             transactionRepository.save(transaction);
         } else
-            throw new IllegalArgumentException("Transaction not exists.");
+            throw new IllegalArgumentException("Transaction is canceled.");
     }
 
     private void validateTransactionType(TransactionType transactionType) {
@@ -85,7 +91,8 @@ public class TransactionService {
         } else if(transaction.getStatusTransaction().equals(StatusTransaction.COMPLETED)){
             throw new IllegalArgumentException("This transaction is already completed");
         }
-        transaction.setStatusTransaction(StatusTransaction.CANCEL);
+        transaction.setStatusTransaction(StatusTransaction.CANCELED);
         transactionRepository.save(transaction);
     }
 }
+
