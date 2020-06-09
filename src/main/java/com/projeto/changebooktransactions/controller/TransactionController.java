@@ -33,7 +33,7 @@ public class TransactionController {
 
     @PatchMapping
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void updateTransaction(@RequestHeader String transactionId,@RequestHeader String Authorization) throws IllegalArgumentException {
+    public void updateTransaction(@RequestParam String transactionId,@RequestHeader String Authorization) throws IllegalArgumentException {
         if (transactionId != null)
             transactionFacade.updateTransaction(transactionId);
         else
@@ -54,7 +54,7 @@ public class TransactionController {
 
     @PatchMapping("/cancel")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void cancelTransactions(@RequestHeader String transactionId,@RequestHeader String Authorization) {
+    public void cancelTransactions(@RequestParam String transactionId,@RequestHeader String Authorization) {
         transactionFacade.cancelTransaction(transactionId, Authorization);
     }
 }
