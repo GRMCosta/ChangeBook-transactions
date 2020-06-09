@@ -44,28 +44,29 @@ public class TransactionFacade {
 
     }
 
-    public List<Transaction> getUserIncompleteTransactions(String Authorization){
-        return getTransactions(Authorization).stream()
+    public List<Transaction> getUserIncompleteTransactions(String expand,String Authorization){
+        return getTransactions(expand,Authorization).stream()
                 .filter(t -> t.getStatusTransaction() == StatusTransaction.PENDING).collect(Collectors.toList());
     }
 
-    public List<Transaction> getUserCompleteTransactions(String Authorization){
-        return getTransactions(Authorization).stream().
+    public List<Transaction> getUserCompleteTransactions(String expand,String Authorization){
+        return getTransactions(expand,Authorization).stream().
                 filter(t -> t.getStatusTransaction() != StatusTransaction.PENDING).collect(Collectors.toList());
     }
 
-    private List<Transaction> getTransactions(String Authorization) {
+    private List<Transaction> getTransactions(String expand, String Authorization) {
         final User user = userClient.getUserByToken(Authorization);
 
-        if (!transactionService.existsByNewOwner(user))
+        if (!transactionService.existsByOwner(user))
             throw new InternalError("O usuário não possui transações ativas.");
-
-        return transactionService.getUserTransaction(user);
+        if(!expand.equalsIgnoreCase("requestor") && !expand.equalsIgnoreCase("user"))
+            throw new InternalError("Invalid data.");
+        return transactionService.getUserTransaction(expand,user);
     }
 
-    public void updateTransaction(Transaction transaction) throws IllegalArgumentException {
-        if (transaction != null)
-            transactionService.updateTransaction(transaction);
+    public void updateTransaction(String transactionId) throws IllegalArgumentException {
+        if (transactionId != null)
+            transactionService.updateTransaction(transactionId);
         else
             throw new IllegalArgumentException("Invalid data.");
     }

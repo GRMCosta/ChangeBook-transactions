@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 @RestController
 @RequestMapping("/api/change-book/v1/transactions")
@@ -30,25 +31,25 @@ public class TransactionController {
         transactionFacade.createTransaction(transactionRequest, Authorization);
     }
 
-    @PutMapping
+    @PatchMapping
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void updateTransaction(@RequestBody Transaction transaction) throws IllegalArgumentException {
-        if (transaction != null)
-            transactionFacade.updateTransaction(transaction);
+    public void updateTransaction(@RequestHeader String transactionId,@RequestHeader String Authorization) throws IllegalArgumentException {
+        if (transactionId != null)
+            transactionFacade.updateTransaction(transactionId);
         else
             throw new IllegalArgumentException("Invalid data.");
     }
 
     @GetMapping("/incompleted")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<?> getUserIncompletedTransactions(@RequestHeader String Authorization){
-        return ResponseEntity.ok(transactionFacade.getUserIncompleteTransactions(Authorization));
+    public ResponseEntity<?> getUserIncompletedTransactions(@RequestParam @NotNull String expand, @RequestHeader String Authorization){
+        return ResponseEntity.ok(transactionFacade.getUserIncompleteTransactions(expand,Authorization));
     }
 
     @GetMapping("/completed")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<?> getUserCompletedTransactions(@RequestHeader String Authorization){
-        return ResponseEntity.ok(transactionFacade.getUserCompleteTransactions(Authorization));
+    public ResponseEntity<?> getUserCompletedTransactions(@RequestParam @NotNull String expand,@RequestHeader String Authorization){
+        return ResponseEntity.ok(transactionFacade.getUserCompleteTransactions(expand,Authorization));
     }
 
     @PatchMapping("/cancel")
